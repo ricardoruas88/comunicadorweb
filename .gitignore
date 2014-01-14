@@ -6,6 +6,7 @@ $ cat .gitignore
 # Use curingas como
 *~
 *.class
-
+*.jar
 # Ignorar todos os diretórios e arquivos em um diretório.
 tmp/**/* 
+lib/*
