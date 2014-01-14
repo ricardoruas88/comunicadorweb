@@ -11,3 +11,5 @@
 tmp/**/* 
 lib/*
 test/**/*
+/target/
+/build/
