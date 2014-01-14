@@ -10,4 +10,4 @@
 # Ignorar todos os diretórios e arquivos em um diretório.
 tmp/**/* 
 lib/*
-test/**
+test/**/*
