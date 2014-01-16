@@ -1,4 +1,4 @@
-package com.prestashopService.model;
+package br.com.atsinformatica.prestashop.model;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;

@@ -1,22 +1,22 @@
 //
-// Este archivo ha sido generado por la arquitectura JavaTM para la implantación de la referencia de enlace (JAXB) XML v2.2.8-b01 
+// Este archivo ha sido generado por la arquitectura JavaTM para la implantaciï¿½n de la referencia de enlace (JAXB) XML v2.2.8-b01 
 // Visite <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
-// Todas las modificaciones realizadas en este archivo se perderán si se vuelve a compilar el esquema de origen. 
+// Todas las modificaciones realizadas en este archivo se perderï¿½n si se vuelve a compilar el esquema de origen. 
 // Generado el: 2013.11.11 a las 08:07:22 PM CET 
 //
 
 
-package com.prestashopService.api;
+package br.com.atsinformatica.prestashop.api;
 
+import br.com.atsinformatica.prestashop.factory.Languages;
+import br.com.atsinformatica.prestashop.factory.ProductSuppliers;
+import br.com.atsinformatica.prestashop.factory.Products;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-import com.prestashopService.factory.ProductSuppliers;
-import com.prestashopService.factory.Products;
-import com.prestashopService.model.ProductSupplier;
 
 
 /**
@@ -42,6 +42,7 @@ import com.prestashopService.model.ProductSupplier;
 @XmlType(name = "", propOrder = {
     "products",
     "productSuppliers",
+    "languages",
 })
 @XmlRootElement(name = "prestashop")
 public class ServicesWeb{
@@ -52,6 +53,26 @@ public class ServicesWeb{
     @XmlElement(name="product_suppliers")
     protected ProductSuppliers productSuppliers;
 
+    @XmlElement(name="languages")
+    protected Languages languages;
+
+    
+    /**
+     *
+     * @return
+     */
+    public Languages getLanguages() {
+        return languages;
+    }
+
+    /**
+     *
+     * @param languages
+     */
+    public void setLanguages(Languages languages) {
+        this.languages = languages;
+    }
+    
 	//==========PRODUCTS=========================//
     /**
      * Obtiene el valor de la propiedad products.
@@ -93,10 +114,8 @@ public class ServicesWeb{
     /**
      * Define el valor de la propiedad Product_suppliers.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link Product_suppliers }
      *     
+     * @param productSuppliers
      */
     public void setProductSuppliers(ProductSuppliers productSuppliers) {
 		this.productSuppliers = productSuppliers;

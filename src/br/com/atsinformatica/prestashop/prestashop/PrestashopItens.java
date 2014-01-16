@@ -1,21 +1,23 @@
 //
-// Este archivo ha sido generado por la arquitectura JavaTM para la implantación de la referencia de enlace (JAXB) XML v2.2.8-b01 
+// Este archivo ha sido generado por la arquitectura JavaTM para la implantaciï¿½n de la referencia de enlace (JAXB) XML v2.2.8-b01 
 // Visite <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
-// Todas las modificaciones realizadas en este archivo se perderán si se vuelve a compilar el esquema de origen. 
+// Todas las modificaciones realizadas en este archivo se perderï¿½n si se vuelve a compilar el esquema de origen. 
 // Generado el: 2013.11.11 a las 08:18:12 PM CET 
 //
 
 
-package com.prestashopService.prestashop;
+package br.com.atsinformatica.prestashop.prestashop;
 
+import br.com.atsinformatica.prestashop.api.AccessXMLAttribute;
+import br.com.atsinformatica.prestashop.model.Language;
+import br.com.atsinformatica.prestashop.model.Product;
+import br.com.atsinformatica.prestashop.model.ProductSupplier;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-import com.prestashopService.model.Product;
-import com.prestashopService.model.ProductSupplier;
 
 
 /**
@@ -41,15 +43,35 @@ import com.prestashopService.model.ProductSupplier;
 @XmlType(propOrder = {
     "product",
     "productSupplier",
+    "language",
 })
 @XmlRootElement(name = "prestashop")
-public class PrestashopItens {
+public class PrestashopItens extends AccessXMLAttribute{
 
     @XmlElement
     protected Product product;
     
     @XmlElement(name="product_supplier")
     protected ProductSupplier productSupplier;
+    
+    @XmlElement(name="language")
+    protected Language language;
+
+    /**
+     *
+     * @return
+     */
+    public Language getLanguage() {
+        return language;
+    }
+
+    /**
+     *
+     * @param language
+     */
+    public void setLanguage(Language language) {
+        this.language = language;
+    }
     
     /**
      * Obtiene el valor de la propiedad product.
@@ -66,10 +88,8 @@ public class PrestashopItens {
     /**
      * Define el valor de la propiedad product.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link ProductSupplier }
      *     
+     * @param productSupplier
      */
 	public void setProductSupplier(ProductSupplier productSupplier) {
 		this.productSupplier = productSupplier;

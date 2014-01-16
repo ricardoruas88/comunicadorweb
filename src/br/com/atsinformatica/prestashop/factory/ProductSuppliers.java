@@ -1,5 +1,6 @@
-package com.prestashopService.factory;
+package br.com.atsinformatica.prestashop.factory;
 
+import br.com.atsinformatica.prestashop.api.AccessXMLAttribute;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,8 +10,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-import com.prestashopService.api.AccessXMLAttribute;
-import com.prestashopService.model.ProductSupplier;
+
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = { "productSupplier" })
@@ -26,5 +26,10 @@ public class ProductSuppliers {
 		}
 		return this.productSupplier;
 	}
+
+    public void setProductSupplier(List<AccessXMLAttribute> productSupplier) {
+        this.productSupplier = productSupplier;
+    }
+        
 
 }

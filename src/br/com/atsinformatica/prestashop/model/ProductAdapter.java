@@ -1,4 +1,4 @@
-package com.prestashopService.model;
+package br.com.atsinformatica.prestashop.model;
 
 import java.util.HashMap;
 import java.util.Map;

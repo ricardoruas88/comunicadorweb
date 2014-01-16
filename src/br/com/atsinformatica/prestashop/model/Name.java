@@ -1,12 +1,12 @@
 //
-// Este archivo ha sido generado por la arquitectura JavaTM para la implantación de la referencia de enlace (JAXB) XML v2.2.8-b01 
+// Este archivo ha sido generado por la arquitectura JavaTM para la implantaciï¿½n de la referencia de enlace (JAXB) XML v2.2.8-b01 
 // Visite <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
-// Todas las modificaciones realizadas en este archivo se perderán si se vuelve a compilar el esquema de origen. 
+// Todas las modificaciones realizadas en este archivo se perderï¿½n si se vuelve a compilar el esquema de origen. 
 // Generado el: 2013.11.11 a las 08:18:12 PM CET 
 //
 
 
-package com.prestashopService.model;
+package br.com.atsinformatica.prestashop.model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,6 +67,7 @@ public class Name {
      * {@link Language }
      * 
      * 
+     * @return 
      */
     public List<Language> getLanguage() {
         if (language == null) {

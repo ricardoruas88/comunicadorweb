@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xlink:prestashop xmlns:xlink="http://www.w3.org/1999/xlink">
+    <xlink:language id="1">
+        <xlink:name>Portguês pt-BR</xlink:name>
+        <xlink:language_code>br</xlink:language_code>
+        <xlink:iso_code>br</xlink:iso_code>
+        <xlink:active>true</xlink:active>
+        <xlink:is_rtl>false</xlink:is_rtl>
+        <xlink:date_format_lite>Y-m-d</xlink:date_format_lite>
+        <xlink:date_format_full>Y-m-d H:i:s</xlink:date_format_full>
+    </xlink:language>
+</xlink:prestashop>

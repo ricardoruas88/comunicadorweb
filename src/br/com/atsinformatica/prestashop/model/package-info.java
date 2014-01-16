@@ -12,6 +12,6 @@ xmlns={@XmlNs(prefix="xlink", namespaceURI="http://www.w3.org/1999/xlink")}
  * @author Jorge
  *
  */
-package com.prestashopService.model;
+package br.com.atsinformatica.prestashop.model;
 import javax.xml.bind.annotation.*;
 
