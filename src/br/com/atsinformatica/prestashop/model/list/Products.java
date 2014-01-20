@@ -6,7 +6,7 @@
 //
 
 
-package br.com.atsinformatica.prestashop.factory;
+package br.com.atsinformatica.prestashop.model.list;
 
 import br.com.atsinformatica.prestashop.api.AccessXMLAttribute;
 import java.util.ArrayList;

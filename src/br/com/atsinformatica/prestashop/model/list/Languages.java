@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package br.com.atsinformatica.prestashop.factory;
+package br.com.atsinformatica.prestashop.model.list;
 
 import br.com.atsinformatica.prestashop.api.AccessXMLAttribute;
 import java.util.ArrayList;
@@ -20,7 +20,7 @@ import javax.xml.bind.annotation.XmlType;
  * @author ricardosilva
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = { "language" })
+@XmlType(name = "", propOrder = { "listLanguage" })
 @XmlRootElement(name = "languages")
 public class Languages {
     

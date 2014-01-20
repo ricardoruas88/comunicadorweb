@@ -1,7 +1,7 @@
-@XmlSchema(namespace="http://www.w3.org/1999/xlink", 
-elementFormDefault = XmlNsForm.QUALIFIED,
-xmlns={@XmlNs(prefix="xlink", namespaceURI="http://www.w3.org/1999/xlink")}
-		)
+//@XmlSchema(namespace="http://www.w3.org/1999/xlink", 
+//elementFormDefault = XmlNsForm.QUALIFIED,
+//xmlns={@XmlNs(prefix="xlink", namespaceURI="http://www.w3.org/1999/xlink")}
+//		)
 /**
  * 
  */
@@ -10,4 +10,4 @@ xmlns={@XmlNs(prefix="xlink", namespaceURI="http://www.w3.org/1999/xlink")}
  *
  */
 package br.com.atsinformatica.prestashop.api;
-import javax.xml.bind.annotation.*;
+//import javax.xml.bind.annotation.*;
