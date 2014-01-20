@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package br.com.atsinformatica.jdbc;
+package br.com.atsinformatica.midler.jdbc;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -18,7 +18,7 @@ public class ConnectionFactory {
     private static final String DB_DRIVER = "org.firebirdsql.jdbc.FBDriver";
     private static final String DB_CONNECTION = "jdbc:firebirdsql:localhost/3050:C:/Users/ricardosilva/Documents/NetBeansProjects/ecommerce/bd/ECOMMERCEATS.FDB";
     private static final String DB_USER = "SYSDBA";
-    private static final String DB_PASSWORD = "masterkey";
+    private static final String DB_PASSWORD = "masterkey"; 
 
     /**
      * Instancia uma conexão com o banco de dados
