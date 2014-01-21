@@ -2,13 +2,12 @@
 //elementFormDefault = XmlNsForm.QUALIFIED,
 //xmlns={@XmlNs(prefix="xlink", namespaceURI="http://www.w3.org/1999/xlink")}
 //		)
-
 /**
  * 
  */
 /**
- * @author ricardosilva
+ * @author Jorge
  *
  */
-package br.com.atsinformatica.prestashop.prestashop;
+package br.com.atsinformatica.prestashop.model.list;
 //import javax.xml.bind.annotation.*;
