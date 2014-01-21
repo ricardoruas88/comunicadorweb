@@ -290,11 +290,9 @@ public class Funcoes {
     }
 
     public static Short retornaValorNum(Boolean value) {
-        if (value) {
-            return 1;
-        } else {
-            return 0;
-        }
+        if (value) return 1;       
+        return 0;
+        
     }
     
     public static String retornaStrBol(Boolean value){

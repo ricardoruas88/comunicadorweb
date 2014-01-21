@@ -27,8 +27,7 @@ public class ParaUrlDAO implements GenericDAO<ParaUrlWsdlBean> {
 
     @Override
     public void gravar(ParaUrlWsdlBean object) throws SQLException {        
-        PreparedStatement pstmt = null;
-      //  BasicTextEncryptor bt = new BasicTextEncryptor();        
+        PreparedStatement pstmt = null;      
         try {
             conn = ConexaoATS.conectaERP();            
             conn.setAutoCommit(false);
@@ -45,22 +44,14 @@ public class ParaUrlDAO implements GenericDAO<ParaUrlWsdlBean> {
             conn.rollback();
         } finally {
             pstmt.close();
-            conn.close();
-        //    bt = null;
-            
+            conn.close();            
         }
     }
 
     @Override
     public void alterar(ParaUrlWsdlBean object)  throws SQLException {
         PreparedStatement pstmt = null;
-        //BasicTextEncryptor bt = new BasicTextEncryptor();
         try {
-           // String usuario = PropertiesManager.getConfig().getProperty("erp.usuario");
-           // String diretorio = PropertiesManager.getConfig().getProperty("erp.diretorio");
-           // bt.setPassword("senha001");
-           // String senhaDecrypt = bt.decrypt(PropertiesManager.getConfig().getProperty("erp.senha"));
-           // ConexaoATS.conectarERP(diretorio, usuario, senhaDecrypt);
             conn = ConexaoATS.conectaERP();
             String querie = "UPDATE PARAURL set URLWSDL = ? "
                           + " WHERE CODPARAURL = ? ";
@@ -76,7 +67,6 @@ public class ParaUrlDAO implements GenericDAO<ParaUrlWsdlBean> {
             conn.rollback();
         } finally {
             conn.close();
-            //bt = null;
             pstmt.close();
             
         }
@@ -87,11 +77,6 @@ public class ParaUrlDAO implements GenericDAO<ParaUrlWsdlBean> {
         PreparedStatement pstmt = null;
         BasicTextEncryptor bt = new BasicTextEncryptor();
         try {
-          //  String usuario = PropertiesManager.getConfig().getProperty("erp.usuario");
-          //  String diretorio = PropertiesManager.getConfig().getProperty("erp.diretorio");
-          //  bt.setPassword("senha001");
-          //  String senhaDecript = bt.decrypt(PropertiesManager.getConfig().getProperty("erp.senha"));
-            //ConexaoATS.conectarERP(diretorio, usuario, senhaDecript);
             conn = ConexaoATS.conectaERP();
             String querie = "DELETE FROM PARAURL WHERE CODPARAURL = ?";
             pstmt = conn.prepareStatement(querie);
@@ -106,21 +91,14 @@ public class ParaUrlDAO implements GenericDAO<ParaUrlWsdlBean> {
         } finally {
             pstmt.close();
             conn.close();
-           // bt = null;
         }
     }
 
     @Override
     public ParaUrlWsdlBean abrir(String  id) throws SQLException {
         PreparedStatement pstmt = null;
-        //BasicTextEncryptor bt = new BasicTextEncryptor();
         ResultSet rs = null;
         try {
-          //  String usuario = PropertiesManager.getConfig().getProperty("erp.usuario");
-           // String diretorio = PropertiesManager.getConfig().getProperty("erp.diretorio");
-           // bt.setPassword("senha001");
-           // String senhaDecrypt = bt.decrypt(PropertiesManager.getConfig().getProperty("erp.senha"));
-           // ConexaoATS.conectarERP(diretorio, usuario, senhaDecrypt);
             conn = ConexaoATS.conectaERP();
             String querie = "Select * from PARAURL where CODPARAURL = ?";
             pstmt = conn.prepareStatement(querie);
@@ -131,7 +109,6 @@ public class ParaUrlDAO implements GenericDAO<ParaUrlWsdlBean> {
                 paraUrlBean.setCodParaUrlWsdl(rs.getString("CODPARAURL"));
                 paraUrlBean.setUrlWSDL(rs.getString("URLWSDL"));
             }         
-            //conn.setAutoCommit(false);
             System.out.println("Url/WSDl retornado com sucesso!");
             return paraUrlBean;
         } catch (Exception e) {
@@ -140,9 +117,7 @@ public class ParaUrlDAO implements GenericDAO<ParaUrlWsdlBean> {
         } finally {
             rs.close();
             pstmt.close();
-            conn.close();
-           // bt = null;
-            
+            conn.close();           
         }
         
     }
@@ -150,17 +125,12 @@ public class ParaUrlDAO implements GenericDAO<ParaUrlWsdlBean> {
     @Override
     public List<ParaUrlWsdlBean> listaTodos() throws SQLException {
         Statement stmt = null;
-        ResultSet rs = null;
-      //  BasicTextEncryptor bt = new BasicTextEncryptor();
-        List<ParaUrlWsdlBean> listaParaUrl = new ArrayList<>();
+        ResultSet rs = null;    
         try{
-           // String usuario = PropertiesManager.getConfig().getProperty("erp.usuario");
-           // String diretorio = PropertiesManager.getConfig().getProperty("erp.diretorio");
-           // bt.setPassword("senha001");
-          //  String senhaDecrypt = bt.decrypt(PropertiesManager.getConfig().getProperty("erp.senha"));
-          //  ConexaoATS.conectarERP(diretorio, usuario, senhaDecrypt);
+            List<ParaUrlWsdlBean> listaParaUrl = new ArrayList<>();
             String sql  = "Select * from PARAURL ";
-            stmt = ConexaoATS.conectaERP().createStatement();
+            conn = ConexaoATS.conectaERP();
+            stmt = conn.createStatement();
             rs = stmt.executeQuery(sql);
             while(rs.next()){
                 ParaUrlWsdlBean paraUrl = new ParaUrlWsdlBean();
@@ -176,8 +146,7 @@ public class ParaUrlDAO implements GenericDAO<ParaUrlWsdlBean> {
         }finally{
             rs.close();
             stmt.close();
-          //  bt = null;
-            conn.close();           
+            conn.close();
         }
        
     }
