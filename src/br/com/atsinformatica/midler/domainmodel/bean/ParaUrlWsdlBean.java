@@ -4,13 +4,17 @@
  */
 package br.com.atsinformatica.midler.domainmodel.bean;
 
+import com.towel.el.annotation.Resolvable;
+
 /**
  * Bean de configuração de lista de url/wsdl
  * @author AlexsanderPimenta
  */
 public class ParaUrlWsdlBean {
     
+    @Resolvable(colName = "COD")
     private String codParaUrlWsdl;
+    @Resolvable(colName = "Url/WSDL")
     private String urlWSDL;
 
     /**

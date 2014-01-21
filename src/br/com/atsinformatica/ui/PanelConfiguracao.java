@@ -6,18 +6,27 @@ package br.com.atsinformatica.ui;
 
 import br.com.atsinformatica.midler.bean.ERPBean;
 import br.com.atsinformatica.midler.bean.FileBean;
+import br.com.atsinformatica.midler.dao.ParaEcomDAO;
+import br.com.atsinformatica.midler.dao.ParaUrlDAO;
+import br.com.atsinformatica.midler.domainmodel.bean.ParaEcomBean;
+import br.com.atsinformatica.midler.domainmodel.bean.ParaUrlWsdlBean;
 import br.com.atsinformatica.midler.jdbc.ConexaoATS;  
 import br.com.atsinformatica.midler.properties.OrderedProperties;
 import br.com.atsinformatica.midler.utils.Funcoes;
 import br.com.atsinformatica.midler.properties.PropertiesManager;
+import com.towel.el.annotation.AnnotationResolver;
+import com.towel.swing.table.ObjectTableModel;
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.List;
 import java.util.Properties;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
+import javax.swing.JTable;
+import javax.swing.table.TableColumn;
 import org.jasypt.util.text.BasicTextEncryptor;
 //import org.apache.log4j.Logger;
 
@@ -28,6 +37,11 @@ import org.jasypt.util.text.BasicTextEncryptor;
 public class PanelConfiguracao extends javax.swing.JPanel {
 
     private PanelPrincipal principal = PanelPrincipal.getInstance();
+    private BasicTextEncryptor bt;
+    private AnnotationResolver resolver = new AnnotationResolver(ParaUrlWsdlBean.class);
+    private String fieldResolver = "codParaUrlWsdl,urlWSDL";
+    private ObjectTableModel urlModel = new ObjectTableModel(resolver, fieldResolver);
+    private String codParaEcom;
 
     /**
      * Creates new form PanelConfiguracao
@@ -35,9 +49,12 @@ public class PanelConfiguracao extends javax.swing.JPanel {
     public PanelConfiguracao() {
         initComponents();
         jToolBar1.setFloatable(false);
+        bt = new BasicTextEncryptor();
+        bt.setPassword("senha001");
         //iniciando painel de configurações
         //desabilita campos       
-        Funcoes.habilitaDesabCampos(this, false);
+        Funcoes.habilitaDesabCampos(jPanel3, false);
+        Funcoes.habilitaDesabCampos(jPanel5,false);
         //carrega arquivo de configurações
         carregaArquivoConfig();
         //verifica se banco foi criado em diretorio especificado
@@ -47,36 +64,37 @@ public class PanelConfiguracao extends javax.swing.JPanel {
         if (jBalterar.isEnabled()) {
             jBalterar.requestFocus();
         }
-        
-        
+       
     }
 
     /**
      * Carrega arquivo de configurações
      */
-    private void carregaArquivoConfig() {
-        File file = PropertiesManager.getFile();
-        // ERPATSController controller = new ERPATSController();
-        try {
+    private void carregaArquivoConfig() {       
+        try {            
             //verifica se arquivo existe
-            if (file.exists()) {
-                jBalterar.setEnabled(true);
-                jBincluir.setEnabled(false);
+            if (PropertiesManager.getFile().exists()) {
+                ParaEcomDAO dao = new ParaEcomDAO();
+                ParaEcomBean bean = dao.listaTodos().get(0);                
                // jBfechar.setEnabled(true);
                 Properties config = PropertiesManager.getConfig();
                 //carrega arquivo de configurações
-                jTMinCad1.setText(config.getProperty("minutoscadastro"));
-                jTMinMov1.setText(config.getProperty("minutosmov"));
                 jTdiretorioERP1.setText(config.getProperty("erp.diretorio"));
                 jTUsuarioERP1.setText(config.getProperty("erp.usuario"));
-                jTsenhaERP1.setText(config.getProperty("erp.senha"));
-                jtQtdereg.setText(config.getProperty("qtderegistros"));
-                jtQtdemant.setText(config.getProperty("qtdemantido"));
-                jTURL.setText(config.getProperty("urlwsdl"));
-              //  jRSim.setSelected(config.getProperty("ativasincronizazao").equals("Sim"));
-              //  jRNao.setSelected(config.getProperty("ativasincronizazao").equals("Nao"));
-                // logger.info("O arquivo de configurações foi carregado com sucesso!");
+                jTsenhaERP1.setText(bt.decrypt(config.getProperty("erp.senha")));
+                jTMinCad1.setText(String.valueOf(bean.getMinutoscadastrados()));
+                jTMinMov1.setText(String.valueOf(bean.getMinutosmov()));
+                setCodParaEcom(bean.getCodparaecom());                
+                jtQtdereg.setText(String.valueOf(bean.getQtdeRegistros()));
+                jtQtdemant.setText(String.valueOf(bean.getQtdMantido()));
+                jRSim2.setSelected(bean.getAtivaSincronizacao()==1);
+                jRNao2.setSelected(bean.getAtivaSincronizacao()==0);
+                jBalterar.setEnabled(true);
+                jBincluir.setEnabled(false);
+                jBfechar.setEnabled(true);
             }
+            carregaGrid();
+            
         } catch (Exception e) {
             System.out.println("Erro : "+e);
             //logger.error("Erro ao carregar arquivo de configuração: " + e.getMessage());
@@ -86,39 +104,16 @@ public class PanelConfiguracao extends javax.swing.JPanel {
     /*
      * Seta parametros do arquivo de configuração
      * Caso o arquivo de configuração não exista, cria novo
-     * @param ecommBean - Bean do ecommerce
      * @param erpBean - Bean do ERP
-     * @param minutosSinc - Quantidade de minutos sincronização;
      */
-
     private void setaArquivoConfiguracao(ERPBean erpBean) throws IOException {
         OrderedProperties config = new OrderedProperties();
         FileOutputStream fileos = new FileOutputStream("config.ini");
         try {
-            //config.setProperty("minutoscadastro", Integer.toString(minutosSincCadastro));
-            //config.setProperty("minutosmov", Integer.toString(minutosSincMov));
             config.setProperty("erp.diretorio", erpBean.getCaminho());
             config.setProperty("erp.usuario", erpBean.getUsuario());
             //Encripta senha
-            BasicTextEncryptor bt = new BasicTextEncryptor();
-            //seta codigo de segurança do encriptador
-            bt.setPassword("senha001");
-            config.setProperty("erp.senha", bt.encrypt(erpBean.getSenha()));
-            
-//            if (config.getProperty("erp.senha") != null) {
-//                if (!config.getProperty("erp.senha").toString().equals(erpBean.getSenha())) {
-//                    config.setProperty("erp.senha", erpBean.getSenha());
-//                } else {
-//                    config.setProperty("erp.senha", erpBean.getSenha());
-//                }
-//            } else {
-//                config.setProperty("erp.senha", erpBean.getSenha());
-//            }
-            //config.setProperty("qtderegistros", Integer.toString(erpBean.getQtdeReg()));
-            //config.setProperty("qtdemantido", Integer.toString(erpBean.getQtdeMant()));
-            //config.setProperty("urlwsdl", erpBean.getUrlWSDL());
-            //config.setProperty("ativasincronizazao", Funcoes.retornaStrBol(erpBean.isAtivSinc()));            
-            
+            config.setProperty("erp.senha", bt.encrypt(erpBean.getSenha()));            
             //grava alterações
             config.store(fileos, "Arquivo de configurações do Midler");
             //fecha arquivo
@@ -168,9 +163,9 @@ public class PanelConfiguracao extends javax.swing.JPanel {
         jPanel5 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         jTURL = new javax.swing.JTextField();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jXTable1 = new org.jdesktop.swingx.JXTable();
         jButton1 = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTbUrl = new javax.swing.JTable();
         jBfechar = new javax.swing.JButton();
         jBcancelar = new javax.swing.JButton();
         jBgravar = new javax.swing.JButton();
@@ -205,6 +200,7 @@ public class PanelConfiguracao extends javax.swing.JPanel {
 
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Ativar sincronização:"));
 
+        buttonGroup1.add(jRSim2);
         jRSim2.setText("Sim");
         jRSim2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -212,6 +208,7 @@ public class PanelConfiguracao extends javax.swing.JPanel {
             }
         });
 
+        buttonGroup1.add(jRNao2);
         jRNao2.setText("Não");
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
@@ -373,7 +370,7 @@ public class PanelConfiguracao extends javax.swing.JPanel {
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jPIntervaloSinc1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -384,13 +381,13 @@ public class PanelConfiguracao extends javax.swing.JPanel {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jtQtdemant, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel12)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTdiretorioERP1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jBTSelecionaDirErp1))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel13)
                     .addComponent(jLabel14))
@@ -399,26 +396,13 @@ public class PanelConfiguracao extends javax.swing.JPanel {
                     .addComponent(jTUsuarioERP1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jBConexao)
                     .addComponent(jTsenhaERP1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(132, Short.MAX_VALUE))
+                .addContainerGap(235, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("ERP", jPanel3);
 
         jLabel3.setFont(new java.awt.Font("Arial", 1, 11)); // NOI18N
         jLabel3.setText("Informe WSDL ou URL do WebService:");
-
-        jXTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null}
-            },
-            new String [] {
-                "Cod.", "URL/WSDL"
-            }
-        ));
-        jScrollPane1.setViewportView(jXTable1);
 
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/atsinformatica/midler/assets/icons/arrow_down.png"))); // NOI18N
         jButton1.setText("Adcionar");
@@ -427,6 +411,28 @@ public class PanelConfiguracao extends javax.swing.JPanel {
                 jButton1ActionPerformed(evt);
             }
         });
+
+        jTbUrl.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null}
+            },
+            new String [] {
+                "Cod.", "Url/WSDL"
+            }
+        ));
+        jTbUrl.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTbUrlKeyReleased(evt);
+            }
+        });
+        jScrollPane2.setViewportView(jTbUrl);
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -438,10 +444,10 @@ public class PanelConfiguracao extends javax.swing.JPanel {
                     .addComponent(jLabel3)
                     .addGroup(jPanel5Layout.createSequentialGroup()
                         .addComponent(jTURL, javax.swing.GroupLayout.PREFERRED_SIZE, 598, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton1))
-                    .addComponent(jScrollPane1))
-                .addContainerGap(31, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2))
+                .addContainerGap(43, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -453,8 +459,8 @@ public class PanelConfiguracao extends javax.swing.JPanel {
                     .addComponent(jTURL, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 247, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(84, Short.MAX_VALUE))
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(231, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("WebService", jPanel5);
@@ -531,9 +537,13 @@ public class PanelConfiguracao extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jBincluir)
+                        .addGap(0, 0, 0)
                         .addComponent(jBalterar)
+                        .addGap(0, 0, 0)
                         .addComponent(jBgravar)
+                        .addGap(0, 0, 0)
                         .addComponent(jBcancelar)
+                        .addGap(0, 0, 0)
                         .addComponent(jBfechar)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
@@ -551,7 +561,7 @@ public class PanelConfiguracao extends javax.swing.JPanel {
                     .addComponent(jBcancelar)
                     .addComponent(jBfechar))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 443, Short.MAX_VALUE)
+                .addComponent(jTabbedPane1)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -565,9 +575,9 @@ public class PanelConfiguracao extends javax.swing.JPanel {
 
     private void jBincluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBincluirActionPerformed
         principal.setjOperacao("Inclusão");
-        Funcoes.habilitaDesabCampos(this, true);
+        Funcoes.habilitaDesabCampos(jPanel3, true);
+        Funcoes.habilitaDesabCampos(jPanel5, true);
         Funcoes.limpaTela(jPanel3);
-
         jBcancelar.setEnabled(true);
         jBgravar.setEnabled(true);
         jBalterar.setEnabled(false);
@@ -578,12 +588,12 @@ public class PanelConfiguracao extends javax.swing.JPanel {
 
     private void jBalterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBalterarActionPerformed
         principal.setjOperacao("Alteração");
-        Funcoes.habilitaDesabCampos(this, true);
+        Funcoes.habilitaDesabCampos(jPanel3, true);
+        Funcoes.habilitaDesabCampos(jPanel5, true);
         jBcancelar.setEnabled(true);
         jBgravar.setEnabled(true);
         jBalterar.setEnabled(false);
         jBincluir.setEnabled(false);
-
         jTdiretorioERP1.requestFocus();
         jBTSelecionaDirErp1.setEnabled(true);
     }//GEN-LAST:event_jBalterarActionPerformed
@@ -594,20 +604,15 @@ public class PanelConfiguracao extends javax.swing.JPanel {
             erp.setCaminho(jTdiretorioERP1.getText());
             erp.setUsuario(jTUsuarioERP1.getText());
             erp.setSenha(String.copyValueOf(jTsenhaERP1.getPassword()));
-            erp.setQtdeMant(Integer.parseInt(jtQtdemant.getText()));
-            erp.setQtdeReg(Integer.parseInt(jtQtdereg.getText()));
-            erp.setUrlWSDL(jTURL.getText());
-            erp.setAtivSinc(jRSim.isSelected());
             setaArquivoConfiguracao(erp);
+            cadastraParaEcom();
+            cadastraParaUrl();
             Funcoes.habilitaDesabCampos(this, false);
             jBincluir.setEnabled(false);
             jBcancelar.setEnabled(false);
             jBgravar.setEnabled(false);
-            //  logger.info("Gravado com sucesso!");
-            //reestarta aplicação
             JOptionPane.showMessageDialog(null, "A aplicação será encerrada para que as configurações sejam efetivadas.");
             Funcoes.reiniciaAplicacao();
-
         } catch (Exception e) {
             // logger.error("Erro ao gravar: " + e);
             JOptionPane.showMessageDialog(null, "Erro ao gravar: " + e.getMessage());
@@ -616,8 +621,6 @@ public class PanelConfiguracao extends javax.swing.JPanel {
     }//GEN-LAST:event_jBgravarActionPerformed
 
     private void jBcancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBcancelarActionPerformed
-
-        //File file = new File("config.ini");
         int ok = JOptionPane.showConfirmDialog(null, "Deseja cancelar a operação", "Confirmação", JOptionPane.YES_NO_OPTION);
         if (ok == JOptionPane.YES_OPTION) {
             principal.setjOperacao("");
@@ -627,11 +630,10 @@ public class PanelConfiguracao extends javax.swing.JPanel {
                 Funcoes.limpaTela(jPanel3);
             } else {
                 carregaArquivoConfig();
-                //jBalterar.setEnabled(true);
-                //jBincluir.setEnabled(false);
             }
             Funcoes.habilitaDesabCampos(jPanel3, false);
             Funcoes.habilitaDesabCampos(jPanel5, false);
+            //urlModel.clear();
             jBConexao.setEnabled(false);
             jBcancelar.setEnabled(false);
             jBgravar.setEnabled(false);
@@ -727,8 +729,16 @@ public class PanelConfiguracao extends javax.swing.JPanel {
     }//GEN-LAST:event_jBTSelecionaDirErp1ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        ParaUrlWsdlBean paraUrl = new ParaUrlWsdlBean();
+        paraUrl.setUrlWSDL(jTURL.getText());
+        urlModel.add(paraUrl);
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jTbUrlKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTbUrlKeyReleased
+         if (evt.getKeyCode() == KeyEvent.VK_DELETE) {
+            urlModel.remove(jTbUrl.getSelectedRow());
+        }
+    }//GEN-LAST:event_jTbUrlKeyReleased
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
@@ -751,27 +761,21 @@ public class PanelConfiguracao extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPIntervaloSinc1;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
-    private javax.swing.JRadioButton jRNao;
-    private javax.swing.JRadioButton jRNao1;
     private javax.swing.JRadioButton jRNao2;
-    private javax.swing.JRadioButton jRSim;
-    private javax.swing.JRadioButton jRSim1;
     private javax.swing.JRadioButton jRSim2;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextField jTMinCad1;
     private javax.swing.JTextField jTMinMov1;
     private javax.swing.JTextField jTURL;
     private javax.swing.JTextField jTUsuarioERP1;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JTable jTbUrl;
     private javax.swing.JTextField jTdiretorioERP1;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JPasswordField jTsenhaERP1;
-    private org.jdesktop.swingx.JXTable jXTable1;
     private javax.swing.JTextField jtQtdemant;
     private javax.swing.JTextField jtQtdereg;
     // End of variables declaration//GEN-END:variables
@@ -792,4 +796,78 @@ public class PanelConfiguracao extends javax.swing.JPanel {
 
         return properties;
     }
+ 
+    private void carregaGrid(){
+        ParaUrlDAO dao = new ParaUrlDAO();
+        try{
+            
+            jTbUrl.setModel(urlModel);        
+            jTbUrl.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+            urlModel.setEditableDefault(false);
+            urlModel.setColEditable(1, true);
+            TableColumn colCod = jTbUrl.getColumnModel().getColumn(0);
+            colCod.setPreferredWidth(70);
+            TableColumn colUrl = jTbUrl.getColumnModel().getColumn(1);
+            colUrl.setPreferredWidth(623);
+        List<ParaUrlWsdlBean> listaParaUrl = dao.listaTodos();        
+        if(!listaParaUrl.isEmpty()){
+            for(ParaUrlWsdlBean bean : listaParaUrl){
+                urlModel.add(bean);
+            }
+        }       
+        }catch(Exception e){
+            System.out.println("Erro ao preencher grid: "+e);
+        }       
+    }
+    /**
+     * Cadastra registro na tabela ParaECOM
+     */
+    private void cadastraParaEcom(){
+        try{
+            ParaEcomBean paraEcom = new ParaEcomBean();
+            ParaEcomDAO dao = new ParaEcomDAO();            
+            paraEcom.setMinutoscadastrados(Integer.parseInt(jTMinCad1.getText()));
+            paraEcom.setMinutosmov(Integer.parseInt(jTMinMov1.getText()));
+            paraEcom.setQtdeRegistros(Integer.parseInt(jtQtdereg.getText()));
+            paraEcom.setQtdMantido(Integer.parseInt(jtQtdemant.getText()));
+            paraEcom.setAtivaSincronizacao(Funcoes.retornaValorNum(jRSim2.isSelected()));
+            paraEcom.setCodparaecom(getCodParaEcom());
+            if(principal.getjOperacao().equals("Inclusão"))
+                dao.gravar(paraEcom);
+            else if(principal.getjOperacao().equals("Alteração"))
+                dao.alterar(paraEcom);
+        }catch(Exception e){
+            System.out.println("Erro ao cadastrar parametros: "+e);            
+        }
+    }
+    
+    private void cadastraParaUrl(){
+        try{
+            List<ParaUrlWsdlBean> listaParaUrl = urlModel.getData();
+            ParaUrlDAO dao = new ParaUrlDAO();
+            for(ParaUrlWsdlBean paraUrl : listaParaUrl){
+                if(principal.getjOperacao().equals("Inclusão"))
+                    dao.gravar(paraUrl);
+                if(principal.getjOperacao().equals("Alteração"))
+                    dao.alterar(paraUrl);
+            }
+        }catch(Exception e){
+            
+        }
+    }
+
+    /**
+     * @return the codParaEcom
+     */
+    public String getCodParaEcom() {
+        return codParaEcom;
+    }
+
+    /**
+     * @param codParaEcom the codParaEcom to set
+     */
+    public void setCodParaEcom(String codParaEcom) {
+        this.codParaEcom = codParaEcom;
+    }
+    
 }
