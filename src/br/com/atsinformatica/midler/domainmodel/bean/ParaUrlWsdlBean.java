@@ -10,20 +10,20 @@ package br.com.atsinformatica.midler.domainmodel.bean;
  */
 public class ParaUrlWsdlBean {
     
-    private int codParaUrlWsdl;
+    private String codParaUrlWsdl;
     private String urlWSDL;
 
     /**
      * @return the codParaUrlWsdl
      */
-    public int getCodParaUrlWsdl() {
+    public String getCodParaUrlWsdl() {
         return codParaUrlWsdl;
     }
 
     /**
      * @param codParaUrlWsdl the codParaUrlWsdl to set
      */
-    public void setCodParaUrlWsdl(int codParaUrlWsdl) {
+    public void setCodParaUrlWsdl(String codParaUrlWsdl) {
         this.codParaUrlWsdl = codParaUrlWsdl;
     }
 

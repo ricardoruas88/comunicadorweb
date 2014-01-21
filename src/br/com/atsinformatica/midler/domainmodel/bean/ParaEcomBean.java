@@ -10,7 +10,7 @@ package br.com.atsinformatica.midler.domainmodel.bean;
  */
 public class ParaEcomBean {
     
-    private int codparaecom;
+    private String codparaecom;
     private int minutoscadastro;
     private int minutosmov;
     private int qtdeRegistros;
@@ -21,14 +21,14 @@ public class ParaEcomBean {
     /**
      * @return the codparaecom
      */
-    public int getCodparaecom() {
+    public String getCodparaecom() {
         return codparaecom;
     }
 
     /**
      * @param codparaecom the codparaecom to set
      */
-    public void setCodparaecom(int codparaecom) {
+    public void setCodparaecom(String codparaecom) {
         this.codparaecom = codparaecom;
     }
 

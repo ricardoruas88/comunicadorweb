@@ -8,6 +8,7 @@ import static java.awt.Frame.MAXIMIZED_BOTH;
 import java.awt.Toolkit;
 import java.io.File;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 /**
  *
@@ -361,6 +362,10 @@ public class PanelPrincipal extends javax.swing.JFrame {
             instance = new PanelPrincipal();
         }
         return instance;
+    }
+    
+    public JPanel getJMainPanel(){
+        return this.getJMainPanel();
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton JConfiguracao;

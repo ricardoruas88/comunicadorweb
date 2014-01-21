@@ -4,10 +4,12 @@
  */
 package br.com.atsinformatica.midler.jdbc;
 
+import br.com.atsinformatica.midler.properties.PropertiesManager;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import org.jasypt.util.text.BasicTextEncryptor;
 
 
 /**
@@ -70,6 +72,31 @@ public class ConexaoATS {
             return "Não foi possível conectar ao banco de dados. Verifique o caminho informado e tente novamente.";
         }
     }
+    
+    
+    /**
+     * Método responsável por realizar a 
+     * conexão com o banco de dados do erp
+     * @return a conexão 
+     */
+    public static Connection conectaERP(){
+        BasicTextEncryptor bt = new BasicTextEncryptor();
+        try{
+            String diretorio = PropertiesManager.getConfig().getProperty("erp.diretorio");
+            String usuario = PropertiesManager.getConfig().getProperty("erp.usuario");
+            bt.setPassword("senha001");
+            String senhaDecrypt = bt.decrypt(PropertiesManager.getConfig().getProperty("erp.senha"));
+            System.out.println("Conectando...");
+            Class.forName("org.firebirdsql.jdbc.FBDriver").newInstance();
+            setConnection(DriverManager.getConnection("jdbc:firebirdsql://" + diretorio, usuario, senhaDecrypt));
+            setStmt(getConnection().createStatement());
+            System.out.println("Conectado com sucesso!");
+            return getConnection();
+        }catch(Exception e){
+            System.out.println("Erro ao conectar: "+e);
+            return null;          
+        }
+    }
 
     public static void fechaConexao() throws SQLException {
         connection.close();
@@ -80,6 +107,8 @@ public class ConexaoATS {
      * @return the connection
      */
     public static Connection getConnection() {
+        
+        
         return connection;
     }
 

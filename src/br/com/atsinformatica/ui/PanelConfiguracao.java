@@ -17,6 +17,8 @@ import java.io.IOException;
 import java.util.Properties;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import org.jasypt.util.text.BasicTextEncryptor;
 //import org.apache.log4j.Logger;
 
 /**
@@ -60,7 +62,7 @@ public class PanelConfiguracao extends javax.swing.JPanel {
             if (file.exists()) {
                 jBalterar.setEnabled(true);
                 jBincluir.setEnabled(false);
-                jBfechar.setEnabled(true);
+               // jBfechar.setEnabled(true);
                 Properties config = PropertiesManager.getConfig();
                 //carrega arquivo de configurações
                 jTMinCad1.setText(config.getProperty("minutoscadastro"));
@@ -76,7 +78,7 @@ public class PanelConfiguracao extends javax.swing.JPanel {
                 // logger.info("O arquivo de configurações foi carregado com sucesso!");
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("Erro : "+e);
             //logger.error("Erro ao carregar arquivo de configuração: " + e.getMessage());
         }
 
@@ -97,15 +99,21 @@ public class PanelConfiguracao extends javax.swing.JPanel {
             //config.setProperty("minutosmov", Integer.toString(minutosSincMov));
             config.setProperty("erp.diretorio", erpBean.getCaminho());
             config.setProperty("erp.usuario", erpBean.getUsuario());
-            if (config.getProperty("erp.senha") != null) {
-                if (!config.getProperty("erp.senha").toString().equals(erpBean.getSenha())) {
-                    config.setProperty("erp.senha", erpBean.getSenha());
-                } else {
-                    config.setProperty("erp.senha", erpBean.getSenha());
-                }
-            } else {
-                config.setProperty("erp.senha", erpBean.getSenha());
-            }
+            //Encripta senha
+            BasicTextEncryptor bt = new BasicTextEncryptor();
+            //seta codigo de segurança do encriptador
+            bt.setPassword("senha001");
+            config.setProperty("erp.senha", bt.encrypt(erpBean.getSenha()));
+            
+//            if (config.getProperty("erp.senha") != null) {
+//                if (!config.getProperty("erp.senha").toString().equals(erpBean.getSenha())) {
+//                    config.setProperty("erp.senha", erpBean.getSenha());
+//                } else {
+//                    config.setProperty("erp.senha", erpBean.getSenha());
+//                }
+//            } else {
+//                config.setProperty("erp.senha", erpBean.getSenha());
+//            }
             //config.setProperty("qtderegistros", Integer.toString(erpBean.getQtdeReg()));
             //config.setProperty("qtdemantido", Integer.toString(erpBean.getQtdeMant()));
             //config.setProperty("urlwsdl", erpBean.getUrlWSDL());
@@ -595,52 +603,6 @@ public class PanelConfiguracao extends javax.swing.JPanel {
             jBincluir.setEnabled(false);
             jBcancelar.setEnabled(false);
             jBgravar.setEnabled(false);
-            //            if (jTMinCad1.getText().isEmpty()) {
-                //                JOptionPane.showMessageDialog(null, "Preencher campo 'Cadastro' na aba sincronização");
-                //              //  JTabERP.setSelectedIndex(1);
-                //                jTMinCad1.requestFocus();
-                //                return;
-                //            } else {
-                //                minutosSincronizacao = Integer.parseInt(jTMinCad1.getText());
-                //            }
-            //            if (jTMinMov1.getText().isEmpty()) {
-                //                JOptionPane.showMessageDialog(null, "Preencher campo 'Movimentações' na aba sincronização");
-                //             //   JTabERP.setSelectedIndex(1);
-                //                jTMinMov1.requestFocus();
-                //                return;
-                //            } else {
-                //                minutosMovimentacoes = Integer.parseInt(jTMinMov1.getText());
-                //            }
-            //            if (jTdiretorioERP1.getText().isEmpty() || jTdiretorioERP1.getText().equals("")) {
-                //                JOptionPane.showMessageDialog(null, "Preencher campo diretório na aba ERP");
-                //              //  JTabERP.setSelectedIndex(2);
-                //                jTdiretorioERP1.requestFocus();
-                //                return;
-                //            } else {
-                //                erp.setCaminho(jTdiretorioERP1.getText());
-                //            }
-            //            if (jTUsuarioERP1.getText().isEmpty() || jTUsuarioERP1.getText().equals("")) {
-                //                JOptionPane.showMessageDialog(null, "Preencher campo usuário na aba ERP");
-                //               // JTabERP.setSelectedIndex(2);
-                //                jTUsuarioERP1.requestFocus();
-                //                return;
-                //            } else {
-                //                erp.setUsuario(jTUsuarioERP1.getText());
-                //            }
-            //            if (jTsenhaERP1.getPassword().toString().isEmpty() || jTsenhaERP1.getText().equals("")) {
-                //                JOptionPane.showMessageDialog(null, "Preencher campo senha na aba ERP");
-                //               // JTabERP.setSelectedIndex(2);
-                //                jTMinCad1.requestFocus();
-                //                return;
-                //            } else {
-                //                erp.setSenha(String.copyValueOf(jTsenhaERP1.getPassword()));
-                //            }
-            //            setaArquivoConfiguracao(erp, minutosSincronizacao, minutosMovimentacoes);
-            //            Funcoes.habilitaDesabCampos(this, false);
-            //            jBincluir.setEnabled(false);
-            //            jBcancelar.setEnabled(false);
-            //            jBgravar.setEnabled(false);
-
             //  logger.info("Gravado com sucesso!");
             //reestarta aplicação
             JOptionPane.showMessageDialog(null, "A aplicação será encerrada para que as configurações sejam efetivadas.");
@@ -649,6 +611,7 @@ public class PanelConfiguracao extends javax.swing.JPanel {
         } catch (Exception e) {
             // logger.error("Erro ao gravar: " + e);
             JOptionPane.showMessageDialog(null, "Erro ao gravar: " + e.getMessage());
+            PropertiesManager.getConfig().clear();
         }
     }//GEN-LAST:event_jBgravarActionPerformed
 
@@ -664,26 +627,31 @@ public class PanelConfiguracao extends javax.swing.JPanel {
                 Funcoes.limpaTela(jPanel3);
             } else {
                 carregaArquivoConfig();
+                //jBalterar.setEnabled(true);
+                //jBincluir.setEnabled(false);
             }
-            Funcoes.habilitaDesabCampos(this, false);
+            Funcoes.habilitaDesabCampos(jPanel3, false);
+            Funcoes.habilitaDesabCampos(jPanel5, false);
             jBConexao.setEnabled(false);
             jBcancelar.setEnabled(false);
             jBgravar.setEnabled(false);
             jBTSelecionaDirErp1.setEnabled(false);
+            //jBalterar.setEnabled(true);
             jBfechar.setEnabled(true);
         }
     }//GEN-LAST:event_jBcancelarActionPerformed
 
     private void jBfecharActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBfecharActionPerformed
         principal.setjOperacao("");
-
         principal.setjStatus("");
-        //fecha tudo
+          //fecha tudo
         this.removeAll();
-        
-        this.remove(jPanel1);
         //atualiza ui
-        this.updateUI();
+        this.updateUI(); 
+        
+        setBorder(null);
+        
+        
     }//GEN-LAST:event_jBfecharActionPerformed
 
     private void jBConexaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBConexaoActionPerformed
