@@ -27,6 +27,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.transform.stream.StreamResult;
+import org.eclipse.persistence.jaxb.MarshallerProperties;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLFilter;
@@ -96,6 +97,7 @@ public class ClientPrestashop {
 
             context = JAXBContext.newInstance(itens.getClass());
             Marshaller marshaller = context.createMarshaller();
+            //marshaller.setProperty(MarshallerProperties.NAMESPACE_PREFIX_MAPPER, new MyPrefixMapper());
             marshaller.setProperty(
                     javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT,
                     Boolean.TRUE
