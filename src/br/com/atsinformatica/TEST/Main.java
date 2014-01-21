@@ -8,10 +8,11 @@ package br.com.atsinformatica.TEST;
 import br.com.atsinformatica.prestashop.api.AccessXMLAttribute;
 import br.com.atsinformatica.prestashop.api.ServicesWeb;
 import br.com.atsinformatica.prestashop.client.ClientPrestashop;
-import br.com.atsinformatica.prestashop.model.ProductFeature;
-import br.com.atsinformatica.prestashop.model.entitygeneric.Language;
-import br.com.atsinformatica.prestashop.model.entitygeneric.Name;
+import br.com.atsinformatica.prestashop.model.product_feature.ProductFeature;
+import br.com.atsinformatica.prestashop.model.product_feature.Language;
+import br.com.atsinformatica.prestashop.model.product_feature.Name;
 import br.com.atsinformatica.prestashop.model.list.ProductFeatures;
+import br.com.atsinformatica.prestashop.model.product.Prestashop;
 import br.com.atsinformatica.prestashop.prestashop.GetPrestashopItem;
 import br.com.atsinformatica.prestashop.prestashop.SetPrestashopItem;
 import java.io.IOException;
@@ -58,27 +59,27 @@ public class Main {
         System.out.println(id);
     }
     
-    public void testPostProduct() throws JAXBException, ParserConfigurationException, SAXException, IOException {
+    public void testPostProduct() throws JAXBException, ParserConfigurationException, SAXException, IOException, Exception {
 
         ClientPrestashop client = new ClientPrestashop();
-        List<Language> listLang = new ArrayList<Language>();
-
-        Language language = new Language();
-        language.setContent("ricardo ruas silva é um cara muito bom top");
-        language.setId("1");
-        listLang.add(language);
-
-        Name name = new Name();
-        name.setLanguage(listLang);
-
-        ProductFeature feature = new ProductFeature();
-        //feature.setId(6);
-        feature.setName(name);
-        feature.setPosition("0");
-
-        SetPrestashopItem prestashop = new SetPrestashopItem();
-        prestashop.setProductFeature(feature);
-
-        client.postPrestashopPackage("product_features/",prestashop);
+//        List<Language> listLang = new ArrayList<Language>();
+//
+//        Language language = new Language();
+//        language.setContent("ricardo ruas silva é um cara muito bom top");
+//        language.setId("1");
+//        listLang.add(language);
+//
+//        Name name = new Name();
+//        name.setLanguage(listLang);
+//
+//        ProductFeature feature = new ProductFeature();
+//        //feature.setId(6);
+//        feature.setName(name);
+//        feature.setPosition("0");
+//
+//        SetPrestashopItem prestashop = new SetPrestashopItem();
+//        prestashop.setProductFeature(feature);
+          client.getPrestashopPackage("product/2",Prestashop.class);
+//        client.postPrestashopPackage("product_features/",prestashop);
     }
 }

@@ -5,7 +5,8 @@
 // Generado el: 2013.11.11 a las 08:18:12 PM CET 
 //
 
-package br.com.atsinformatica.prestashop.model.entitygeneric;
+
+package br.com.atsinformatica.prestashop.model.product;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,8 +40,8 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "", propOrder = {
     "language"
 })
-@XmlRootElement(name = "description")
-public class Description {
+@XmlRootElement(name = "name")
+public class Name {
 
     @XmlElement(required = true)
     protected List<Language> language;

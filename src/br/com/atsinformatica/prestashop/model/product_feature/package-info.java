@@ -12,6 +12,6 @@
  * @author Jorge
  *
  */
-package br.com.atsinformatica.prestashop.model.entitygeneric;
+package br.com.atsinformatica.prestashop.model.product_feature;
 //import javax.xml.bind.annotation.*;
 

@@ -4,13 +4,12 @@
  * and open the template in the editor.
  */
 
-package br.com.atsinformatica.prestashop.model.entitygeneric;
+package br.com.atsinformatica.prestashop.model.product_feature;
 
 /**
  *
  * @author ricardosilva
  */
-import br.com.atsinformatica.prestashop.model.ProductFeature;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;

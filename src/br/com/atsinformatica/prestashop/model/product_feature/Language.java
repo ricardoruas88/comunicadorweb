@@ -1,4 +1,4 @@
-package br.com.atsinformatica.prestashop.model.entitygeneric;
+package br.com.atsinformatica.prestashop.model.product_feature;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;

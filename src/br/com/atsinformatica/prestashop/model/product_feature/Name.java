@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package br.com.atsinformatica.prestashop.model.entitygeneric;
+package br.com.atsinformatica.prestashop.model.product_feature;
 
 import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
