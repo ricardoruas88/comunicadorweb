@@ -226,8 +226,14 @@
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="jtQtdereg">
+              <Events>
+                <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="jtQtderegFocusLost"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JTextField" name="jtQtdemant">
+              <Events>
+                <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="jtQtdemantFocusLost"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel12">
               <Properties>
@@ -243,7 +249,6 @@
                   <Image iconType="3" name="/br/com/atsinformatica/midler/assets/icons/connect.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Testar conex&#xe3;o"/>
-                <Property name="enabled" type="boolean" value="false"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jBConexaoActionPerformed"/>
@@ -390,6 +395,7 @@
                 </Component>
                 <Component class="javax.swing.JTextField" name="jTMinCad1">
                   <Events>
+                    <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="jTMinCad1FocusLost"/>
                     <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="jTMinCad1KeyTyped"/>
                   </Events>
                 </Component>
@@ -408,6 +414,7 @@
                 </Component>
                 <Component class="javax.swing.JTextField" name="jTMinMov1">
                   <Events>
+                    <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="jTMinMov1FocusLost"/>
                     <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="jTMinMov1KeyTyped"/>
                   </Events>
                 </Component>

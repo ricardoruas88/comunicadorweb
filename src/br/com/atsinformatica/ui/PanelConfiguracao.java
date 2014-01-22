@@ -10,7 +10,7 @@ import br.com.atsinformatica.midler.dao.ParaEcomDAO;
 import br.com.atsinformatica.midler.dao.ParaUrlDAO;
 import br.com.atsinformatica.midler.domainmodel.bean.ParaEcomBean;
 import br.com.atsinformatica.midler.domainmodel.bean.ParaUrlWsdlBean;
-import br.com.atsinformatica.midler.jdbc.ConexaoATS;  
+import br.com.atsinformatica.midler.jdbc.ConexaoATS;
 import br.com.atsinformatica.midler.properties.OrderedProperties;
 import br.com.atsinformatica.midler.utils.Funcoes;
 import br.com.atsinformatica.midler.properties.PropertiesManager;
@@ -54,7 +54,7 @@ public class PanelConfiguracao extends javax.swing.JPanel {
         //iniciando painel de configurações
         //desabilita campos       
         Funcoes.habilitaDesabCampos(jPanel3, false);
-        Funcoes.habilitaDesabCampos(jPanel5,false);
+        Funcoes.habilitaDesabCampos(jPanel5, false);
         //carrega arquivo de configurações
         carregaArquivoConfig();
         //verifica se banco foi criado em diretorio especificado
@@ -64,19 +64,19 @@ public class PanelConfiguracao extends javax.swing.JPanel {
         if (jBalterar.isEnabled()) {
             jBalterar.requestFocus();
         }
-       
+
     }
 
     /**
      * Carrega arquivo de configurações
      */
-    private void carregaArquivoConfig() {       
-        try {            
+    private void carregaArquivoConfig() {
+        try {
             //verifica se arquivo existe
             if (PropertiesManager.getFile().exists()) {
                 ParaEcomDAO dao = new ParaEcomDAO();
-                ParaEcomBean bean = dao.listaTodos().get(0);                
-               // jBfechar.setEnabled(true);
+                ParaEcomBean bean = dao.listaTodos().get(0);
+                // jBfechar.setEnabled(true);
                 Properties config = PropertiesManager.getConfig();
                 //carrega arquivo de configurações
                 jTdiretorioERP1.setText(config.getProperty("erp.diretorio"));
@@ -84,19 +84,19 @@ public class PanelConfiguracao extends javax.swing.JPanel {
                 jTsenhaERP1.setText(bt.decrypt(config.getProperty("erp.senha")));
                 jTMinCad1.setText(String.valueOf(bean.getMinutoscadastrados()));
                 jTMinMov1.setText(String.valueOf(bean.getMinutosmov()));
-                setCodParaEcom(bean.getCodparaecom());                
+                setCodParaEcom(bean.getCodparaecom());
                 jtQtdereg.setText(String.valueOf(bean.getQtdeRegistros()));
                 jtQtdemant.setText(String.valueOf(bean.getQtdMantido()));
-                jRSim2.setSelected(bean.getAtivaSincronizacao()==1);
-                jRNao2.setSelected(bean.getAtivaSincronizacao()==0);
+                jRSim2.setSelected(bean.getAtivaSincronizacao() == 1);
+                jRNao2.setSelected(bean.getAtivaSincronizacao() == 0);
                 jBalterar.setEnabled(true);
                 jBincluir.setEnabled(false);
                 jBfechar.setEnabled(true);
             }
             carregaGrid();
-            
+
         } catch (Exception e) {
-            System.out.println("Erro : "+e);
+            System.out.println("Erro : " + e);
             //logger.error("Erro ao carregar arquivo de configuração: " + e.getMessage());
         }
 
@@ -106,6 +106,7 @@ public class PanelConfiguracao extends javax.swing.JPanel {
      * Caso o arquivo de configuração não exista, cria novo
      * @param erpBean - Bean do ERP
      */
+
     private void setaArquivoConfiguracao(ERPBean erpBean) throws IOException {
         OrderedProperties config = new OrderedProperties();
         FileOutputStream fileos = new FileOutputStream("config.ini");
@@ -113,7 +114,7 @@ public class PanelConfiguracao extends javax.swing.JPanel {
             config.setProperty("erp.diretorio", erpBean.getCaminho());
             config.setProperty("erp.usuario", erpBean.getUsuario());
             //Encripta senha
-            config.setProperty("erp.senha", bt.encrypt(erpBean.getSenha()));            
+            config.setProperty("erp.senha", bt.encrypt(erpBean.getSenha()));
             //grava alterações
             config.store(fileos, "Arquivo de configurações do Midler");
             //fecha arquivo
@@ -186,12 +187,23 @@ public class PanelConfiguracao extends javax.swing.JPanel {
         jLabel1.setFont(new java.awt.Font("Arial", 1, 11)); // NOI18N
         jLabel1.setText("Qtde. registros:");
 
+        jtQtdereg.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jtQtderegFocusLost(evt);
+            }
+        });
+
+        jtQtdemant.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jtQtdemantFocusLost(evt);
+            }
+        });
+
         jLabel12.setFont(new java.awt.Font("Arial", 1, 11)); // NOI18N
         jLabel12.setText("Informe o caminho completo do banco de dados: (exemplo: \"localhost/3050:C/Banco/ResulthERP.fdb\")");
 
         jBConexao.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/atsinformatica/midler/assets/icons/connect.png"))); // NOI18N
         jBConexao.setText("Testar conexão");
-        jBConexao.setEnabled(false);
         jBConexao.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jBConexaoActionPerformed(evt);
@@ -253,6 +265,11 @@ public class PanelConfiguracao extends javax.swing.JPanel {
         jLabel8.setFont(new java.awt.Font("sansserif", 1, 12)); // NOI18N
         jLabel8.setText("Cadastro:");
 
+        jTMinCad1.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jTMinCad1FocusLost(evt);
+            }
+        });
         jTMinCad1.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 jTMinCad1KeyTyped(evt);
@@ -264,6 +281,11 @@ public class PanelConfiguracao extends javax.swing.JPanel {
         jLabel18.setFont(new java.awt.Font("sansserif", 1, 12)); // NOI18N
         jLabel18.setText("Movimentações:");
 
+        jTMinMov1.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jTMinMov1FocusLost(evt);
+            }
+        });
         jTMinMov1.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 jTMinMov1KeyTyped(evt);
@@ -604,6 +626,7 @@ public class PanelConfiguracao extends javax.swing.JPanel {
             erp.setCaminho(jTdiretorioERP1.getText());
             erp.setUsuario(jTUsuarioERP1.getText());
             erp.setSenha(String.copyValueOf(jTsenhaERP1.getPassword()));
+            if(!verificaCamposActionPerformed()) return ;
             setaArquivoConfiguracao(erp);
             cadastraParaEcom();
             cadastraParaUrl();
@@ -646,25 +669,23 @@ public class PanelConfiguracao extends javax.swing.JPanel {
     private void jBfecharActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBfecharActionPerformed
         principal.setjOperacao("");
         principal.setjStatus("");
-          //fecha tudo
+        //fecha tudo
         this.removeAll();
         //atualiza ui
-        this.updateUI(); 
-        
+        this.updateUI();
+
         setBorder(null);
-        
-        
+
+
     }//GEN-LAST:event_jBfecharActionPerformed
 
     private void jBConexaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBConexaoActionPerformed
 
         File file = new File("config.ini");
         try {
-
             String senha = jTsenhaERP1.getText();
             if (file.exists()) {
                 Properties config = getProperties();
-
                 //se arquivo de configuração não esta vazio
                 if (!config.isEmpty()) {
                     //se senha digitada é diferente da senha do arquivo de configurações, criptografa nova senha
@@ -672,18 +693,13 @@ public class PanelConfiguracao extends javax.swing.JPanel {
                         senha = jTsenhaERP1.getText();
                     }
                     JOptionPane.showMessageDialog(null, ConexaoATS.conectarERP(jTdiretorioERP1.getText(), jTUsuarioERP1.getText(), senha));
-                    // carregaComboFiliais(jTdiretorioERP.getText(), jTUsuarioERP.getText(), senha);
                 } else {
                     JOptionPane.showMessageDialog(null, ConexaoATS.conectarERP(jTdiretorioERP1.getText(), jTUsuarioERP1.getText(), senha));
-                    //  carregaComboFiliais(jTdiretorioERP.getText(), jTUsuarioERP.getText(), senha);
                 }
             } else {
                 JOptionPane.showMessageDialog(null, ConexaoATS.conectarERP(jTdiretorioERP1.getText(), jTUsuarioERP1.getText(), senha));
-                // carregaComboFiliais(jTdiretorioERP.getText(), jTUsuarioERP.getText(), senha);
             }
-
             ConexaoATS.fechaConexao();
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -694,9 +710,7 @@ public class PanelConfiguracao extends javax.swing.JPanel {
     }//GEN-LAST:event_jRSim2jRSimActionPerformed
 
     private void jTsenhaERP1FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTsenhaERP1FocusLost
-        if (jTUsuarioERP1.getText() != "" && jTdiretorioERP1.getText() != "" && jTsenhaERP1.getPassword().toString() != "") {
-            jBConexao.setEnabled(true);
-        }
+       
     }//GEN-LAST:event_jTsenhaERP1FocusLost
 
     private void jTdiretorioERP1FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTdiretorioERP1FocusLost
@@ -706,13 +720,16 @@ public class PanelConfiguracao extends javax.swing.JPanel {
 
     private void jTMinCad1KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTMinCad1KeyTyped
         String caracteres = "0123456789";
-        if (!caracteres.contains(evt.getKeyChar() + "")) {
+        if (!caracteres.contains(evt.getKeyChar() + "") ) {
             evt.consume();
         }
     }//GEN-LAST:event_jTMinCad1KeyTyped
 
     private void jTMinMov1KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTMinMov1KeyTyped
-        // TODO add your handling code here:
+         String caracteres = "0123456789";
+        if (!caracteres.contains(evt.getKeyChar() + "")) {
+            evt.consume();
+        }
     }//GEN-LAST:event_jTMinMov1KeyTyped
 
     private void jBTSelecionaDirErp1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBTSelecionaDirErp1ActionPerformed
@@ -735,10 +752,38 @@ public class PanelConfiguracao extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jTbUrlKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTbUrlKeyReleased
-         if (evt.getKeyCode() == KeyEvent.VK_DELETE) {
+        if (evt.getKeyCode() == KeyEvent.VK_DELETE) {
             urlModel.remove(jTbUrl.getSelectedRow());
         }
     }//GEN-LAST:event_jTbUrlKeyReleased
+
+    private void jTMinCad1FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTMinCad1FocusLost
+        if(jTMinCad1.getText().equals("0")){
+            JOptionPane.showMessageDialog(null, "Informe um intervalo de sincronização de cadastro, acima de 0");
+            jTMinCad1.requestFocus();          
+        }
+    }//GEN-LAST:event_jTMinCad1FocusLost
+
+    private void jTMinMov1FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTMinMov1FocusLost
+        if(jTMinMov1.getText().equals("0")){
+            JOptionPane.showMessageDialog(null, "Informe um intervalo de sincronização de movimentações, acima de 0");
+            jTMinMov1.requestFocus();          
+        }
+    }//GEN-LAST:event_jTMinMov1FocusLost
+
+    private void jtQtderegFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jtQtderegFocusLost
+        if(jtQtdereg.getText().equals("0")){
+            JOptionPane.showMessageDialog(null, "Informe uma quantidade de registros a serem sincronizados, acima de 0");
+            jtQtdereg.requestFocus();            
+        }
+    }//GEN-LAST:event_jtQtderegFocusLost
+
+    private void jtQtdemantFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jtQtdemantFocusLost
+         if(jtQtdemant.getText().equals("0")){
+            JOptionPane.showMessageDialog(null, "Informe uma quantidade de registros a serem mantidos, acima de 0");
+            jtQtdemant.requestFocus();            
+        }
+    }//GEN-LAST:event_jtQtdemantFocusLost
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
@@ -786,22 +831,19 @@ public class PanelConfiguracao extends javax.swing.JPanel {
      * @return arquivo de configuração
      */
     public Properties getProperties() throws IOException {
-
         Properties properties = new Properties();
         File file = new File("config.ini");
         FileInputStream fileis = new FileInputStream(file);
         if (file.exists()) {
             properties.load(fileis);
         }
-
         return properties;
     }
- 
-    private void carregaGrid(){
+
+    private void carregaGrid() {
         ParaUrlDAO dao = new ParaUrlDAO();
-        try{
-            
-            jTbUrl.setModel(urlModel);        
+        try {
+            jTbUrl.setModel(urlModel);
             jTbUrl.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
             urlModel.setEditableDefault(false);
             urlModel.setColEditable(1, true);
@@ -809,50 +851,53 @@ public class PanelConfiguracao extends javax.swing.JPanel {
             colCod.setPreferredWidth(70);
             TableColumn colUrl = jTbUrl.getColumnModel().getColumn(1);
             colUrl.setPreferredWidth(623);
-        List<ParaUrlWsdlBean> listaParaUrl = dao.listaTodos();        
-        if(!listaParaUrl.isEmpty()){
-            for(ParaUrlWsdlBean bean : listaParaUrl){
-                urlModel.add(bean);
+            List<ParaUrlWsdlBean> listaParaUrl = dao.listaTodos();
+            if (!listaParaUrl.isEmpty()) {
+                for (ParaUrlWsdlBean bean : listaParaUrl) {
+                    urlModel.add(bean);
+                }
             }
-        }       
-        }catch(Exception e){
-            System.out.println("Erro ao preencher grid: "+e);
-        }       
+        } catch (Exception e) {
+            System.out.println("Erro ao preencher grid: " + e);
+        }
     }
+
     /**
      * Cadastra registro na tabela ParaECOM
      */
-    private void cadastraParaEcom(){
-        try{
+    private void cadastraParaEcom() {
+        try {
             ParaEcomBean paraEcom = new ParaEcomBean();
-            ParaEcomDAO dao = new ParaEcomDAO();            
+            ParaEcomDAO dao = new ParaEcomDAO();
             paraEcom.setMinutoscadastrados(Integer.parseInt(jTMinCad1.getText()));
             paraEcom.setMinutosmov(Integer.parseInt(jTMinMov1.getText()));
             paraEcom.setQtdeRegistros(Integer.parseInt(jtQtdereg.getText()));
             paraEcom.setQtdMantido(Integer.parseInt(jtQtdemant.getText()));
             paraEcom.setAtivaSincronizacao(Funcoes.retornaValorNum(jRSim2.isSelected()));
             paraEcom.setCodparaecom(getCodParaEcom());
-            if(principal.getjOperacao().equals("Inclusão"))
+            if (principal.getjOperacao().equals("Inclusão")) {
                 dao.gravar(paraEcom);
-            else if(principal.getjOperacao().equals("Alteração"))
+            } else if (principal.getjOperacao().equals("Alteração")) {
                 dao.alterar(paraEcom);
-        }catch(Exception e){
-            System.out.println("Erro ao cadastrar parametros: "+e);            
+            }
+        } catch (Exception e) {
+            System.out.println("Erro ao cadastrar parametros: " + e);
         }
     }
-    
-    private void cadastraParaUrl(){
-        try{
+
+    private void cadastraParaUrl() {
+        try {
             List<ParaUrlWsdlBean> listaParaUrl = urlModel.getData();
             ParaUrlDAO dao = new ParaUrlDAO();
-            for(ParaUrlWsdlBean paraUrl : listaParaUrl){
-                if(principal.getjOperacao().equals("Inclusão"))
+            for (ParaUrlWsdlBean paraUrl : listaParaUrl) {
+                if (principal.getjOperacao().equals("Inclusão")) {
                     dao.gravar(paraUrl);
-                if(principal.getjOperacao().equals("Alteração"))
+                }
+                if (principal.getjOperacao().equals("Alteração")) {
                     dao.alterar(paraUrl);
+                }
             }
-        }catch(Exception e){
-            
+        } catch (Exception e) {
         }
     }
 
@@ -869,5 +914,53 @@ public class PanelConfiguracao extends javax.swing.JPanel {
     public void setCodParaEcom(String codParaEcom) {
         this.codParaEcom = codParaEcom;
     }
-    
+
+    /**
+     * Verifica se campos obrigatorios estão vazios
+     */
+    public boolean verificaCamposActionPerformed() {
+        if(jTdiretorioERP1.getText().equals("")){
+            JOptionPane.showMessageDialog(null, "Informe o diretório do banco ERP.");            
+            jTabbedPane1.setSelectedIndex(0);
+            jTdiretorioERP1.requestFocus();
+            return false;
+        }
+        else if(jTUsuarioERP1.getText().equals("")){
+            JOptionPane.showMessageDialog(null, "Informe usuário do banco ERP");
+            jTabbedPane1.setSelectedIndex(0);
+            jTUsuarioERP1.requestFocus();
+            return false;            
+        }
+        else if(jTsenhaERP1.getText().equals("")){
+            JOptionPane.showMessageDialog(null, "Informe senha do banco ERP");
+            jTabbedPane1.setSelectedIndex(0);
+            jTsenhaERP1.requestFocus();
+            return false;
+        }
+        else if(jTMinCad1.getText().equals("")){
+            JOptionPane.showMessageDialog(null, "Informe intervalo de sincronização de cadastros.");
+            jTabbedPane1.setSelectedIndex(0);
+            jTMinCad1.requestFocus();
+            return false;
+        }
+        else if(jTMinMov1.getText().equals("")){
+            JOptionPane.showMessageDialog(null, "Informe intervalo de sincronização de movimentações.");
+            jTabbedPane1.setSelectedIndex(0);
+            jTMinMov1.requestFocus();
+            return false;
+        }
+        else if(jtQtdereg.getText().equals("")){
+            JOptionPane.showMessageDialog(null, "Informe quantidade de registros que serão sincronizados.");
+            jTabbedPane1.setSelectedIndex(0);
+            jtQtdereg.requestFocus();
+            return false;
+        }
+        else if(urlModel.getData().isEmpty()){
+            JOptionPane.showMessageDialog(null, "Informe ao menos um WSDL ou URL do WebService.");
+            jTabbedPane1.setSelectedIndex(1);
+            jTURL.requestFocus();
+            return false;
+        }
+        return true;       
+    }
 }
