@@ -1,6 +1,14 @@
 package br.com.atsinformatica.prestashop.client;
 
-import br.com.atsinformatica.prestashop.model.ProductFeature;
+import br.com.atsinformatica.prestashop.model.product.Description;
+import br.com.atsinformatica.prestashop.model.product.Language;
+import br.com.atsinformatica.prestashop.model.product.Name;
+import br.com.atsinformatica.prestashop.model.product.ObjectFactory;
+import br.com.atsinformatica.prestashop.model.product.Prestashop;
+import br.com.atsinformatica.prestashop.model.product.Price;
+import br.com.atsinformatica.prestashop.model.product.Product;
+import br.com.atsinformatica.prestashop.model.product.Type;
+import br.com.atsinformatica.prestashop.model.product_feature.ProductFeature;
 import br.com.atsinformatica.prestashop.prestashop.SetPrestashopItem;
 import br.com.atsinformatica.prestashop.sax.NamespaceFilter;
 import java.util.logging.Logger;
@@ -19,6 +27,9 @@ import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.PropertyException;
@@ -27,7 +38,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.transform.stream.StreamResult;
-import org.eclipse.persistence.jaxb.MarshallerProperties;
+import org.eclipse.persistence.internal.oxm.Root;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLFilter;
@@ -90,24 +101,25 @@ public class ClientPrestashop {
         return presta;
     }
 
-    public void postPrestashopPackage(String path,SetPrestashopItem itens) throws JAXBException, ParserConfigurationException, SAXException, IOException {
+    public void postPrestashopPackage(String path, Object itens) throws JAXBException, ParserConfigurationException, SAXException, IOException {
         final StringWriter out = new StringWriter();
         JAXBContext context = null;
         try {
 
             context = JAXBContext.newInstance(itens.getClass());
+
             Marshaller marshaller = context.createMarshaller();
             //marshaller.setProperty(MarshallerProperties.NAMESPACE_PREFIX_MAPPER, new MyPrefixMapper());
             marshaller.setProperty(
                     javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT,
                     Boolean.TRUE
             );
-            
+
             marshaller.marshal(itens, new StreamResult(out));
             System.out.println(out);
-//            String xml = out.toString().replace("<xlink:", "<");
-//            xml = xml.replace("</xlink:", "</");
-//            System.out.println(xml);
+            String xml = out.toString().replace("<xlink:", "<");
+            xml = xml.replace("</xlink:", "</");
+            System.out.println(xml);
 
             ClientConfig config = new DefaultClientConfig();
             Client client = Client.create(config);
@@ -121,7 +133,7 @@ public class ClientPrestashop {
         } catch (JAXBException e) {
         }
     }
-    
+
     public void mostrar(Object o) {
         System.out.println(o);
     }

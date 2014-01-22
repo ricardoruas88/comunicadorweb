@@ -10,7 +10,7 @@ package br.com.atsinformatica.prestashop.prestashop;
  *
  * @author ricardosilva
  */
-import br.com.atsinformatica.prestashop.model.ProductFeature;
+import br.com.atsinformatica.prestashop.model.product_feature.ProductFeature;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;

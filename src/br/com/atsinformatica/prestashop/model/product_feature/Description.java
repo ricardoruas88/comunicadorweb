@@ -5,7 +5,7 @@
 // Generado el: 2013.11.11 a las 08:18:12 PM CET 
 //
 
-package br.com.atsinformatica.prestashop.model.entitygeneric;
+package br.com.atsinformatica.prestashop.model.product_feature;
 
 import java.util.ArrayList;
 import java.util.List;
