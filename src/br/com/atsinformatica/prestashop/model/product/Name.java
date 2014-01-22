@@ -36,38 +36,20 @@ import javax.xml.bind.annotation.XmlType;
  * 
  * 
  */
+/**
+ *
+ * @author ricardosilva
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
     "language"
 })
-@XmlRootElement(name = "name")
+@XmlRootElement(name = "name")      
 public class Name {
-
+    
     @XmlElement(required = true)
     protected List<Language> language;
 
-    /**
-     * Gets the value of the language property.
-     * 
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the language property.
-     * 
-     * <p>
-     * For example, to add a new item, do as follows:
-     * <pre>
-     *    getLanguage().add(newItem);
-     * </pre>
-     * 
-     * 
-     * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link Language }
-     * 
-     * 
-     */
     public List<Language> getLanguage() {
         if (language == null) {
             language = new ArrayList<Language>();
@@ -75,4 +57,14 @@ public class Name {
         return this.language;
     }
 
+    public void setLanguage(List<Language> language) {
+        this.language = language;
+    }
+
+    @Override
+    public String toString() {
+        return "Name{" + "language=" + language + '}';
+    }
+    
+    
 }

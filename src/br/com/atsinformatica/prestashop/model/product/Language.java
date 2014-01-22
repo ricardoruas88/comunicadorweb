@@ -44,91 +44,43 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  * 
  * 
  */
+@XmlRootElement(name = "language", namespace = "http://www.w3.org/1999/xlink")
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
-    "content"
-})
-@XmlRootElement(name = "language")
-public class Language {
 
+public class Language {
+    
     @XmlValue
     protected String content;
-    @XmlAttribute(name = "href", required = true)
-    protected String href;
     @XmlAttribute(name = "id", required = true)
     @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
     protected String id;
+    @XmlAttribute(name = "xlink:href", required = true)
+    protected String href ="http://localhost/prestashop/languages/:id";
 
-    /**
-     * Obtiene el valor de la propiedad content.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
+    public Language() {
+        this.href = this.href.replace(":id",String.valueOf(1));   
+    }
+    
+    
     public String getContent() {
         return content;
     }
 
-    /**
-     * Define el valor de la propiedad content.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setContent(String value) {
-        this.content = value;
+    public void setContent(String content) {
+        this.content = content;
     }
 
-    /**
-     * Obtiene el valor de la propiedad href.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getHref() {
-        return href;
-    }
-
-    /**
-     * Define el valor de la propiedad href.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setHref(String value) {
-        this.href = value;
-    }
-
-    /**
-     * Obtiene el valor de la propiedad id.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
     public String getId() {
         return id;
     }
 
-    /**
-     * Define el valor de la propiedad id.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setId(String value) {
-        this.id = value;
+    public void setId(String id) {
+        this.href = this.href.replace(":id", id);
+        this.id = id;
     }
 
+    @Override
+    public String toString() {
+        return "Language{" + "content=" + content +", id=" + id + ", href=" + href +'}';
+    }
 }

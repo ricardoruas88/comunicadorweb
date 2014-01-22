@@ -31,12 +31,12 @@ import javax.xml.namespace.QName;
 @XmlRegistry
 public class ObjectFactory {
 
-    private final static QName _RedirectType_QNAME = new QName("", "redirect_type");
-    private final static QName _New_QNAME = new QName("", "new");
-    private final static QName _Unity_QNAME = new QName("", "unity");
-    private final static QName _Location_QNAME = new QName("", "location");
-    private final static QName _SupplierReference_QNAME = new QName("", "supplier_reference");
-    private final static QName _Upc_QNAME = new QName("", "upc");
+    private final static QName _RedirectType_QNAME = new QName("xlink:", "redirect_type");
+    private final static QName _New_QNAME = new QName("xlink:", "new");
+    private final static QName _Unity_QNAME = new QName("xlink:", "unity");
+    private final static QName _Location_QNAME = new QName("xlink:", "location");
+    private final static QName _SupplierReference_QNAME = new QName("xlink:", "supplier_reference");
+    private final static QName _Upc_QNAME = new QName("xlink:", "upc");
 
     /**
      * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: com.prestashopService.product
